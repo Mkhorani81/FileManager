@@ -1,3 +1,4 @@
+from decouple import config
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from rest_framework import status

@@ -5,6 +5,11 @@ from .managers import UserManager
 
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    This is a custom User model that supports using phone number instead of username.
+
+    """
+
     email = models.EmailField(
         max_length=255,
         unique=True

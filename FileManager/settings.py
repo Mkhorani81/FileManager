@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+from email.policy import default
 from pathlib import Path
 from decouple import config
 
@@ -22,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -38,10 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    #third-party apps
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_spectacular',
 
+    #local apps
     'account.apps.AccountConfig',
+    'file.apps.FileConfig',
 ]
 
 MIDDLEWARE = [
@@ -137,6 +143,9 @@ SPECTACULAR_SETTINGS = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#FILES ALLOWED EXTENSIONS
+FILES_ALLOWED_EXTENSIONS = config('FILES_ALLOWED_EXTENSIONS')
+MAX_FILE_SIZE_MB = config('MAX_FILE_SIZE_MB')
 try:
     from .local_settings import *
 except ImportError:
