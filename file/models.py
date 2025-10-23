@@ -3,11 +3,13 @@ import uuid
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator, MinValueValidator
-from django.db import models
-from decouple import config
+from django.db import models, transaction
+from django.db.models import F
+from django.utils import timezone
 
 from utils import file_extension
 
+from .managers import FileManager
 from .validators import validate_file_size
 
 
@@ -70,3 +72,69 @@ class File(models.Model):
         choices=Status.choices,
         default=Status.ACTIVE,
     )
+
+    objects = FileManager()
+
+    class Meta:
+        ordering = ('-uploaded_at',)
+        indexes = [
+            models.Index(fields=['owner']),
+            models.Index(fields=['status']),
+        ]
+        verbose_name = 'File'
+        verbose_name_plural = 'Files'
+
+    def __str__(self):
+        return f'{self.id} - {self.file.name}'
+
+    def is_expired(self):
+        """define an object is expired or not"""
+        if self.expires_at and timezone.now() >= self.expires_at:
+            return True
+        if self.status == self.Status.EXPIRED:
+            return True
+        return False
+
+    def increment_download_count(self):
+        """Increment download count automatically, using atomic transaction"""
+        with transaction.atomic():
+            File.objects.all_objects().filter(pk=self.pk).update(download_count=F('download_count') + 1)
+            self.refresh_from_db(fields=['download_count'])
+
+    def can_download(self):
+        if self.status != self.Status.ACTIVE:
+            return False
+        if self.is_expired():
+            return False
+        if self.max_downloads and self.download_count >= self.max_downloads:
+            return False
+        return True
+
+    def change_status(self, new_status):
+        """
+        Enforce allow transition and log them
+
+        Allowed transition:
+            -Active -> Expired
+            -Active -> Deleted
+            -Expired -> Deleted
+            -Deleted -> (NOT ALLOWED)
+        """
+
+        allowed_transtion = {
+            self.Status.ACTIVE : {self.Status.EXPIRED, self.Status.DELETED},
+            self.Status.EXPIRED : {self.Status.DELETED},
+            self.Status.DELETED : set()
+        }
+
+        if new_status == self.status:
+            return
+
+        if new_status not in allowed_transtion.get(self.status, set()):
+            raise ValueError(f"Transition from {self.status} to {new_status} now allowed!!!")
+
+        old_status = self.status
+        self.status = new_status
+        self.save(update_fields=['status'])
+
+        #TODO: adding log after creating its own model
