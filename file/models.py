@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from utils import file_extension
 
-from .managers import FileManager
+from .managers import FileManager, LinkManager
 from .validators import validate_file_size
 
 
@@ -138,3 +138,35 @@ class File(models.Model):
         self.save(update_fields=['status'])
 
         #TODO: adding log after creating its own model
+
+
+class Link(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    file = models.ForeignKey(
+        File,
+        on_delete=models.CASCADE,
+        related_name='link'
+    )
+    short_code = models.CharField(
+        max_length=32,
+        unique=True,
+        db_index=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    objects = LinkManager()
+
+    class Meta:
+        ordering = ('-created_at',)
+        verbose_name = 'Short Link'
+        verbose_name_plural = 'Short Links'
+
+    def __str__(self):
+        return f'{self.short_code} - {self.file.id}'
+
