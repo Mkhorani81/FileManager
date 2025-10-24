@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     #local apps
     'account.apps.AccountConfig',
     'file.apps.FileConfig',
+    'log.apps.LogConfig',
 ]
 
 MIDDLEWARE = [
