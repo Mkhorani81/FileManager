@@ -28,7 +28,7 @@ class BaseDownloadLog(models.Model):
         blank=True,
         related_name='download_logs',
     )
-    requested_at = models.DateTimeField(
+    timestamp = models.DateTimeField(
         auto_now_add=True,
     )
     ip_address = models.GenericIPAddressField(
@@ -38,7 +38,7 @@ class BaseDownloadLog(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ('-requested_at',)
+        ordering = ('-timestamp',)
         index_together = [
             models.Index('user', 'file')
         ]

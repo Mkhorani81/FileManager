@@ -35,19 +35,20 @@ class DownloadLog(BaseDownloadLog):
         null=True,
         blank=True,
     )
+
     def __str__(self):
         return f'{self.file.name} - {self.username_persistent}'
 
 
 class ChangeLog(BaseChangeLog):
     """
-            Design this model to store information about a change of file by user:
-            Store:
-             - what has been changed,
-             - when has been changed,
-             - who has been changed,
-             - on which model...
-            """
+    Design this model to store information about a change of file by user:
+    Store:
+        - what has been changed,
+        - when has been changed,
+        - who has been changed,
+        - on which model...
+    """
     id = models.BigAutoField(
         primary_key=True
     )
