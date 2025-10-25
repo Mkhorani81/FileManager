@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from file.models import File
-from .base_models import BaseDownloadLog, BaseChangeLog
+from .base_models import BaseDownloadLog
 
 
 # Create your models here.
@@ -40,7 +40,7 @@ class DownloadLog(BaseDownloadLog):
         return f'{self.file.name} - {self.username_persistent}'
 
 
-class ChangeLog(BaseChangeLog):
+class ChangeLog(models.Model):
     """
     Design this model to store information about a change of file by user:
     Store:

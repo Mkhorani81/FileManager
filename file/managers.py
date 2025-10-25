@@ -17,9 +17,6 @@ class FileQuerySet(models.QuerySet):
             Q(expires_at__isnull=True) | Q(expires_at__gt=now),
         ).exclude(status=File.Status.DELETED)
 
-    def all_objects(self):
-        return self.all()
-
 
 class FileManager(models.Manager):
     def get_queryset(self):
@@ -27,9 +24,6 @@ class FileManager(models.Manager):
 
     def active(self):
         return self.get_queryset().active()
-
-    def all_objects(self):
-        return self.get_queryset().all_objects()
 
 
 class LinkQuerySet(models.QuerySet):

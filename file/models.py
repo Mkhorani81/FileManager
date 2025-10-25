@@ -12,8 +12,8 @@ from utils import file_extension
 from .managers import FileManager, LinkManager
 from .validators import validate_file_size
 
-
 ALLOWED_EXTENSIONS = file_extension(settings.FILES_ALLOWED_EXTENSIONS)
+
 
 # Create your models here.
 
@@ -98,7 +98,7 @@ class File(models.Model):
     def increment_download_count(self):
         """Increment download count automatically, using atomic transaction"""
         with transaction.atomic():
-            File.objects.all_objects().filter(pk=self.pk).update(download_count=F('download_count') + 1)
+            File.objects.filter(pk=self.pk).update(download_count=F('download_count') + 1)
             self.refresh_from_db(fields=['download_count'])
 
     def can_download(self):
@@ -122,9 +122,9 @@ class File(models.Model):
         """
 
         allowed_transtion = {
-            self.Status.ACTIVE : {self.Status.EXPIRED, self.Status.DELETED},
-            self.Status.EXPIRED : {self.Status.DELETED},
-            self.Status.DELETED : set()
+            self.Status.ACTIVE: {self.Status.EXPIRED, self.Status.DELETED},
+            self.Status.EXPIRED: {self.Status.DELETED},
+            self.Status.DELETED: set()
         }
 
         if new_status == self.status:
@@ -137,7 +137,7 @@ class File(models.Model):
         self.status = new_status
         self.save(update_fields=['status'])
 
-        #TODO: adding log after creating its own model
+        # TODO: adding log after creating its own model
 
 
 class Link(models.Model):
@@ -169,4 +169,3 @@ class Link(models.Model):
 
     def __str__(self):
         return f'{self.short_code} - {self.file.id}'
-

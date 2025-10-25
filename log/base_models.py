@@ -1,7 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.conf import settings
 
 from file.models import File
 
