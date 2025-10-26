@@ -1,9 +1,7 @@
-from django.template.context_processors import request
 from django.utils.timezone import now
 import ipaddress
 import traceback
 import logging
-import ast
 
 logger = logging.getLogger(__name__)
 
@@ -32,13 +30,13 @@ class BaseDownloadLoggingMixin:
             user = self._get_user(request)
 
             self.log.update({
-                'file' : self._get_file(),
-                'user' : self._get_user(),
-                'ip_address' : self._get_ip_address(),
-                'username_persistent' : user.username if user else None,
-                'short_code' : self._get_short_code(),
-                'success' : 200 <= response.status_code < 300,
-                'status_code' : response.status_code,
+                'file': self._get_file(),
+                'user': self._get_user(),
+                'ip_address': self._get_ip_address(),
+                'username_persistent': user.username if user else None,
+                'short_code': self._get_short_code(),
+                'success': 200 <= response.status_code < 300,
+                'status_code': response.status_code,
             })
 
     def handle_log(self):
@@ -85,9 +83,17 @@ class BaseDownloadLoggingMixin:
                 return None
         return None
 
-
-    def should_log(self,request):
+    def should_log(self, request):
         return (
-            self.logging_methods == '__all__' or request.method in self.logging_methods
+                self.logging_methods == '__all__' or request.method in self.logging_methods
         )
 
+
+class BaseChangeLoggingMixin:
+    logging_methods = '__all__'  # for customizing methods should be logged
+    sensitive_fields = {}
+    CLEANED_SUBSTITUTE = '**********'
+
+    def __init__(self, *args, **kwargs):
+        assert isinstance(self.CLEANED_SUBSTITUTE, str), 'CLEANED_SUBSTITUTE must be a string'
+        super().__init__(*args, **kwargs)
