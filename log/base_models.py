@@ -4,20 +4,9 @@ from django.db import models
 from file.models import File
 
 
-class BaseDownloadLog(models.Model):
-    """
-        Design this model to store information about a download of file by user
-    """
-
+class BaseLogModel(models.Model):
     id = models.BigAutoField(
         primary_key=True
-    )
-    file = models.ForeignKey(
-        File,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='download_logs',
     )
     user = models.ForeignKey(
         get_user_model(),
@@ -26,6 +15,11 @@ class BaseDownloadLog(models.Model):
         blank=True,
         related_name='download_logs',
     )
+    username_persistent = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+    )
     timestamp = models.DateTimeField(
         auto_now_add=True,
     )
@@ -33,12 +27,21 @@ class BaseDownloadLog(models.Model):
         null=True,
         blank=True,
     )
+    success = models.BooleanField(
+        default=False,
+    )
+    status_code = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        db_index=True,
+    )
+    errors = models.TextField(
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         abstract = True
         ordering = ('-timestamp',)
-        index_together = [
-            models.Index('user', 'file')
-        ]
-        verbose_name = 'Download Log'
-        verbose_name_plural = 'Download Logs'
+
+

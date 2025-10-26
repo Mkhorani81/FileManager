@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class BaseDownloadLoggingMixin:
+class BaseLoggingMixin:
     logging_methods = '__all__'  # for customizing methods should be logged
     sensitive_fields = {}
     CLEANED_SUBSTITUTE = '**********'
@@ -25,19 +25,25 @@ class BaseDownloadLoggingMixin:
         return response
 
     def finalize_response(self, request, response, *args, **kwargs):
+
         response = super().finalize_response(request, response, *args, **kwargs)
+
         if self.should_log(request):
             user = self._get_user(request)
 
-            self.log.update({
-                'file': self._get_file(),
-                'user': self._get_user(),
-                'ip_address': self._get_ip_address(),
+            base_log_data = {
+                'user': user,
+                'ip_address': self._get_ip_address(request),
                 'username_persistent': user.username if user else None,
-                'short_code': self._get_short_code(),
                 'success': 200 <= response.status_code < 300,
                 'status_code': response.status_code,
-            })
+            }
+
+            base_log_data.update(self.get_extra_log_data(request, response))
+
+            self.log.update(base_log_data)
+
+        return response
 
     def handle_log(self):
         raise NotImplementedError
@@ -67,6 +73,24 @@ class BaseDownloadLoggingMixin:
             return None
         return user
 
+    def should_log(self, request):
+        return (
+                self.logging_methods == '__all__' or request.method in self.logging_methods
+        )
+
+    def get_extra_log_data(self, request, response):
+
+        return {}
+
+
+class BaseDownloadLoggingMixin(BaseLoggingMixin):
+
+    def get_extra_log_data(self, request, response):
+        return {
+            'file': self._get_file(),
+            'short_code': self._get_short_code(),
+        }
+
     def _get_short_code(self):
         return self.kwargs.get('short_code')
 
@@ -83,17 +107,28 @@ class BaseDownloadLoggingMixin:
                 return None
         return None
 
-    def should_log(self, request):
-        return (
-                self.logging_methods == '__all__' or request.method in self.logging_methods
-        )
 
+class BaseChangeLoggingMixin(BaseLoggingMixin):
+    def get_extra_log_data(self, request, response):
+        return {
+            'content_type': self._get_content_type(),
+            'object_id': self._get_object_id(),
+            'field_name': self._get_field_name(),
+            'old_value': self._get_old_value(),
+            'new_value': self._get_new_value(),
+        }
 
-class BaseChangeLoggingMixin:
-    logging_methods = '__all__'  # for customizing methods should be logged
-    sensitive_fields = {}
-    CLEANED_SUBSTITUTE = '**********'
+    def _get_content_type(self):
+        pass
 
-    def __init__(self, *args, **kwargs):
-        assert isinstance(self.CLEANED_SUBSTITUTE, str), 'CLEANED_SUBSTITUTE must be a string'
-        super().__init__(*args, **kwargs)
+    def _get_object_id(self):
+        pass
+
+    def _get_field_name(self):
+        pass
+
+    def _get_old_value(self):
+        pass
+
+    def _get_new_value(self):
+        pass
