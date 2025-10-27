@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     #local apps
     'account.apps.AccountConfig',
     'file.apps.FileConfig',
+    'log.apps.LogConfig',
 ]
 
 MIDDLEWARE = [
@@ -146,7 +147,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #FILES ALLOWED EXTENSIONS
 FILES_ALLOWED_EXTENSIONS = config('FILES_ALLOWED_EXTENSIONS')
 MAX_FILE_SIZE_MB = config('MAX_FILE_SIZE_MB')
+
 try:
     from .local_settings import *
 except ImportError:
     pass
+
+import sys
+import logging
+# Turn off logging in testing...
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
+    logging.disable(logging.CRITICAL)
