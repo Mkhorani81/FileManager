@@ -28,8 +28,8 @@ class DownloadLog(BaseLogModel):
     )
 
     class Meta:
-        index_together = [
-            models.Index('user', 'file')
+        indexes = [
+            models.Index(fields=['user', 'file']),
         ]
         verbose_name = 'Download Log'
         verbose_name_plural = 'Download Logs'
@@ -75,7 +75,7 @@ class ChangeLog(BaseLogModel):
     )
 
     class Meta:
-        index_together = [
+        indexes = [
             models.Index(fields=['content_type', 'object_id']),
             models.Index(fields=['content_type']),
             models.Index(fields=['object_id']),
