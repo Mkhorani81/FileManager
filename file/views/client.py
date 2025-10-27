@@ -6,7 +6,6 @@ from rest_framework.views import APIView
 from file.models import Link
 from file.serializers.clinet import FileUploadSerializer
 
-
 class FileUploadView(APIView):
     """
     This view used to upload new file,
