@@ -1,10 +1,12 @@
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from file.models import Link
 from file.serializers.clinet import FileUploadSerializer
+from log.mixins import DownloadLoggingMixin
 
 
 class FileUploadView(APIView):
@@ -16,6 +18,9 @@ class FileUploadView(APIView):
         - expires_at -> (Datetime field)
 
         other parameters fill out automatically
+
+    HTTP methods which allowed:
+        - POST
     """
 
     serializer_class = FileUploadSerializer
@@ -32,3 +37,26 @@ class FileUploadView(APIView):
             }
             return Response(response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FileDownloadView(DownloadLoggingMixin, APIView):
+    """
+    This view used to download a file,
+
+    The parameters:
+        - short_code -> (str) for downloading file
+
+    HTTP methods that allows:
+        - GET
+    """
+
+    permission_classes = (AllowAny,)
+
+    def get(self, request, short_code):
+        link = get_object_or_404(Link, short_code=short_code)
+        file_obj = link.file
+
+        if file_obj:
+            pass
+
+
