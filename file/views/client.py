@@ -58,5 +58,3 @@ class FileDownloadView(DownloadLoggingMixin, APIView):
 
         if file_obj:
             pass
-
-
