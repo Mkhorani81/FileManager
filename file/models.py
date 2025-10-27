@@ -7,7 +7,7 @@ from django.db import models, transaction
 from django.db.models import F
 from django.utils import timezone
 
-from utils import file_extension
+from common.utils import file_extension
 
 from .managers import FileManager, LinkManager
 from .validators import validate_file_size

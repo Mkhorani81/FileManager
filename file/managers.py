@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 
-from utils import generate_short_code
+from common.utils import generate_short_code
 
 
 class FileQuerySet(models.QuerySet):

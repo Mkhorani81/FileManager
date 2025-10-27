@@ -3,7 +3,7 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from file.models import File
-from utils import file_extension
+from common.utils import file_extension
 
 
 class FileUploadSerializer(serializers.ModelSerializer):

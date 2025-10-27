@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
+    'storages',
 
     # local apps
     'account.apps.AccountConfig',
@@ -151,29 +152,6 @@ except ImportError:
 # FILES ALLOWED EXTENSIONS
 FILES_ALLOWED_EXTENSIONS = config('FILES_ALLOWED_EXTENSIONS')
 MAX_FILE_SIZE_MB = config('MAX_FILE_SIZE_MB')
-
-# ARVAN CLOUD STORAGES
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-AWS_SERVICE_NAME = 's3'
-AWS_S3_ENDPOINT_URL = "https://s3.ir-thr-at1.arvanstorage.ir"
-AWS_DEFAULT_ACL = None
-
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-        "OPTIONS": {
-            "bucket_name": "file-manager-task",
-            "endpoint_url": AWS_S3_ENDPOINT_URL,
-            "file_overwrite": False,
-        }
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    }
-}
-
-
 
 import sys
 import logging
