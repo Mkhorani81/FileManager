@@ -13,7 +13,7 @@ class BaseLogModel(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='download_logs',
+        related_name='%(class)s',
     )
     username_persistent = models.CharField(
         max_length=255,
@@ -43,5 +43,3 @@ class BaseLogModel(models.Model):
     class Meta:
         abstract = True
         ordering = ('-timestamp',)
-
-

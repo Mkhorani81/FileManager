@@ -24,7 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -40,12 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #third-party apps
+    # third-party apps
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
 
-    #local apps
+    # local apps
     'account.apps.AccountConfig',
     'file.apps.FileConfig',
     'log.apps.LogConfig',
@@ -144,17 +143,41 @@ SPECTACULAR_SETTINGS = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#FILES ALLOWED EXTENSIONS
-FILES_ALLOWED_EXTENSIONS = config('FILES_ALLOWED_EXTENSIONS')
-MAX_FILE_SIZE_MB = config('MAX_FILE_SIZE_MB')
-
 try:
     from .local_settings import *
 except ImportError:
     pass
 
+# FILES ALLOWED EXTENSIONS
+FILES_ALLOWED_EXTENSIONS = config('FILES_ALLOWED_EXTENSIONS')
+MAX_FILE_SIZE_MB = config('MAX_FILE_SIZE_MB')
+
+# ARVAN CLOUD STORAGES
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_SERVICE_NAME = 's3'
+AWS_S3_ENDPOINT_URL = "https://s3.ir-thr-at1.arvanstorage.ir"
+AWS_DEFAULT_ACL = None
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "bucket_name": "file-manager-task",
+            "endpoint_url": AWS_S3_ENDPOINT_URL,
+            "file_overwrite": False,
+        }
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    }
+}
+
+
+
 import sys
 import logging
+
 # Turn off logging in testing...
 if len(sys.argv) > 1 and sys.argv[1] == 'test':
     logging.disable(logging.CRITICAL)
