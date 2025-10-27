@@ -1,3 +1,4 @@
+from django.http import Http404, FileResponse
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -6,6 +7,8 @@ from rest_framework.views import APIView
 
 from file.models import Link
 from file.serializers.clinet import FileUploadSerializer
+
+
 from log.mixins import DownloadLoggingMixin
 
 
@@ -39,7 +42,7 @@ class FileUploadView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FileDownloadView(DownloadLoggingMixin, APIView):
+class FileDownloadView(DownloadLoggingMixin ,APIView):
     """
     This view used to download a file,
 
@@ -56,5 +59,17 @@ class FileDownloadView(DownloadLoggingMixin, APIView):
         link = get_object_or_404(Link, short_code=short_code)
         file_obj = link.file
 
-        if file_obj:
-            pass
+        if not file_obj:
+            return Response({'detail': 'file not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        if not file_obj.can_download():
+            reason = 'expired' if file_obj.is_expired() else 'limit_reached_or_inactive'
+            return Response({'detail': reason}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            file_obj.increment_download_count()
+
+            response = FileResponse(file_obj.file.open('rb'), as_attachment=True, filename=file_obj.file.name)
+            return response
+        except Exception as e:
+            raise e
