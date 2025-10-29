@@ -146,7 +146,7 @@ class Link(models.Model):
         default=uuid.uuid4,
         editable=False
     )
-    file = models.ForeignKey(
+    file = models.OneToOneField(
         File,
         on_delete=models.CASCADE,
         related_name='link'

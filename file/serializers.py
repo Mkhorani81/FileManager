@@ -2,7 +2,7 @@ from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
 
-from file.models import File
+from file.models import File, Link
 from common.utils import file_extension
 
 
@@ -42,3 +42,29 @@ class FileUploadSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return file
+
+
+class LinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Link
+        fields = ('short_code', 'created_at')
+
+
+class FileListSerializer(serializers.ModelSerializer):
+    owner = serializers.StringRelatedField(
+    )
+    link = LinkSerializer()
+
+    class Meta:
+        model = File
+        fields = (
+            'id', 'owner', 'file', 'uploaded_at', 'max_downloads',
+            'expires_at', 'download_count', 'status', 'link'
+        )
+        read_only_fields = fields
+
+
+class FileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = ('max_downloads', 'expires_at')

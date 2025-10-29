@@ -1,16 +1,13 @@
-from logging import raiseExceptions
-
 from django.db import transaction
 from django.http import FileResponse
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from file.models import Link
-from file.serializers.clinet import FileUploadSerializer
+from file.serializers import FileUploadSerializer
 
 from log.mixins import DownloadLoggingMixin
 

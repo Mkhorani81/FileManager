@@ -15,7 +15,7 @@ class DownloadLog(BaseLogModel):
     """
     file = models.ForeignKey(
         File,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name='download_logs',
