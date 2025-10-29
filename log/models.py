@@ -35,7 +35,7 @@ class DownloadLog(BaseLogModel):
         verbose_name_plural = 'Download Logs'
 
     def __str__(self):
-        return f'{self.file.name} - {self.username_persistent}'
+        return f'{self.file} - {self.username_persistent}'
 
 
 class ChangeLog(BaseLogModel):

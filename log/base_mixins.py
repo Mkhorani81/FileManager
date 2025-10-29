@@ -34,7 +34,7 @@ class BaseLoggingMixin:
             base_log_data = {
                 'user': user,
                 'ip_address': self._get_ip_address(request),
-                'username_persistent': user.username if user else None,
+                'username_persistent': user.phone_number if user else None,
                 'success': 200 <= response.status_code < 300,
                 'status_code': response.status_code,
             }
@@ -42,6 +42,11 @@ class BaseLoggingMixin:
             base_log_data.update(self.get_extra_log_data(request, response))
 
             self.log.update(base_log_data)
+
+            try:
+                self.handle_log()
+            except Exception:
+                logger.exception('Logging API call raise exception!')
 
         return response
 
