@@ -45,12 +45,12 @@ class FileAdminViewSet(viewsets.ViewSet):
         ser_data = FileListSerializer(page, many=True)
         return paginator.get_paginated_response(ser_data.data)
 
-    def retrieve(self, pk=None):
+    def retrieve(self, request, pk=None):
         queryset = File.objects.select_related('owner').prefetch_related('link').filter(id=pk)
         ser_data = FileListSerializer(queryset, many=True)
         return Response(ser_data.data)
 
-    def destroy(self, pk=None):
+    def destroy(self, request, pk=None):
         file = File.objects.filter(id=pk)
 
         try:

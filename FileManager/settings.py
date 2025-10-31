@@ -151,7 +151,7 @@ except ImportError:
 
 # FILES ALLOWED EXTENSIONS
 FILES_ALLOWED_EXTENSIONS = config('FILES_ALLOWED_EXTENSIONS')
-MAX_FILE_SIZE_MB = config('MAX_FILE_SIZE_MB')
+MAX_FILE_SIZE_MB = int(config('MAX_FILE_SIZE_MB'))
 
 import sys
 import logging

@@ -1,3 +1,6 @@
+from http.client import responses
+
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.response import Response
@@ -6,11 +9,12 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from account.models import User
+from file.models import File
 from file.views.admin import FileAdminViewSet
 from file.views.client import FileUploadView, FileDownloadView
 
 
-class TestFileUploadView(APITestCase):
+class TestFileUploadViewClient(APITestCase):
     """
     This test is for testing the file upload view on 3 scenarios:
         - un authenticated user -> (401 status code)
@@ -64,3 +68,70 @@ class TestFileUploadView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('file', response.data)
         mock_post.assert_called_once()
+
+
+class TestFileAdminViewSet(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.admin_user = User.objects.create_superuser(
+            phone_number='09111111111',
+            email='admin@admin.com',
+            full_name='admin',
+            password='root1234'
+        )
+        self.client.force_authenticate(user=self.admin_user)
+
+    def test_create_file_successfully(self):
+        file_data = SimpleUploadedFile('test.txt', b'test content')
+        data = {
+            'file': file_data,
+            'max_downloads': 10,
+            'expires_at': (timezone.now() + timezone.timedelta(days=1)).isoformat(),
+        }
+        response = self.client.post(reverse('file:admin-list'), data, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn('link', response.data)
+        self.assertIn('file_id', response.data)
+        self.assertTrue(File.objects.filter(id=response.data['file_id']).exists())
+
+    def test_create_file_invalid_format(self):
+        file_data = SimpleUploadedFile('test.exe', b'test content')
+        data = {
+            'file': file_data,
+            'max_downloads': 10,
+            'expires_at': (timezone.now() + timezone.timedelta(days=1)).isoformat(),
+        }
+
+        response = self.client.post(reverse('file:admin-list'), data, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_partial_update_file(self):
+        file_obj = File.objects.create(owner=self.admin_user, file=SimpleUploadedFile('test.txt', b'test content'))
+        url = reverse('file:admin-detail', args=[file_obj.id])
+        data = {
+            'max_downloads': 10,
+        }
+        response = self.client.patch(url, data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['data']['max_downloads'], 10)
+
+    def test_list_files(self):
+        File.objects.create(owner=self.admin_user, file=SimpleUploadedFile('test.txt', b'test content'))
+        response = self.client.get(reverse('file:admin-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('results', response.data)
+
+    def test_retrieve_file(self):
+        file_obj = File.objects.create(owner=self.admin_user, file=SimpleUploadedFile('test.txt', b'test content'))
+        url = reverse('file:admin-detail', args=[file_obj.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_destroy_file(self):
+        file_obj = File.objects.create(owner=self.admin_user, file=SimpleUploadedFile('test.txt', b'test content'))
+        url = reverse('file:admin-detail', args=[file_obj.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(File.objects.count(), 0)

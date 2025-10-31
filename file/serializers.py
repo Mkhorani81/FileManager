@@ -18,7 +18,7 @@ class FileUploadSerializer(serializers.ModelSerializer):
         )
 
     def validate_file(self, value):
-        max_size = getattr(settings, 'FILES_MAX_SIZE', 100) * 1024 * 1024
+        max_size = getattr(settings, 'MAX_FILE_SIZE_MB', 100) * 1024 * 1024
         if value.size > max_size:
             raise serializers.ValidationError('File too large')
 
