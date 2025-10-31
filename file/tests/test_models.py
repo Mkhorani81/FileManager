@@ -1,5 +1,4 @@
 from datetime import timedelta
-from pickle import FALSE
 
 from django.test import TestCase
 from unittest.mock import patch
