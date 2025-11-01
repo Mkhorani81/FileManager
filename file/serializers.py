@@ -18,6 +18,11 @@ class FileUploadSerializer(serializers.ModelSerializer):
         )
 
     def validate_file(self, value):
+        """
+        Checking validity of file
+            - max size
+            - allowed extension
+        """
         max_size = getattr(settings, 'MAX_FILE_SIZE_MB', 100) * 1024 * 1024
         if value.size > max_size:
             raise serializers.ValidationError('File too large')
@@ -31,6 +36,9 @@ class FileUploadSerializer(serializers.ModelSerializer):
         return value
 
     def validate_expires_at(self, value):
+        """
+        Checking validity of expires_at that expiring time be in future
+        """
         if value and value <= timezone.now():
             raise serializers.ValidationError('Expire time should be in future')
         return value

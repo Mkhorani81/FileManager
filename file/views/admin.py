@@ -11,6 +11,21 @@ from file.serializers import FileUploadSerializer
 
 
 class FileAdminViewSet(viewsets.ViewSet):
+    """
+    This is the viewset for file that only admin access to.
+
+    The methods in view:
+        - create new file (upload file directly)
+            -fields (file, max_downloads, expires_at)
+        - partial_update (edit Meta-data)
+            -fields (max_downloads, expires_at)
+        -list (get all files)
+
+        - retrieve (get one file)
+            - fields (primary key of specific file)
+        -destroy (delete file) -> using soft deleted.
+            - fields (primary key of specific file)
+    """
     permission_classes = (IsAdminUser,)
     pagination_class = FileAdminPagination
 

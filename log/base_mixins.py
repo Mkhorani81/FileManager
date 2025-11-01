@@ -3,10 +3,28 @@ import ipaddress
 import traceback
 import logging
 
+from file.models import File
+
 logger = logging.getLogger(__name__)
 
 
 class BaseLoggingMixin:
+    """
+    This is Base Logging Mixin in which put fields that are used in any logs
+
+
+    For developing app, create new mixins by inheriting from BaseLoggingMixin and -
+    override 'get_extra_log_data' methods for additional fields.
+
+    Base Fields:
+        - user
+        - ip_address
+        - user_name
+        - success
+        - status code
+        - time
+        - errors
+    """
     logging_methods = '__all__'  # for customizing methods should be logged
     sensitive_fields = {}
     CLEANED_SUBSTITUTE = '**********'
@@ -16,15 +34,24 @@ class BaseLoggingMixin:
         super().__init__(*args, **kwargs)
 
     def initial(self, request, *args, **kwargs):
+        """
+        Filling out time by requesting user
+        """
         self.log = {'timestamp': now(), }
         return super().initial(request, *args, **kwargs)
 
     def handle_exception(self, exc):
+        """
+        Saving errors in log
+        """
         response = super().handle_exception(exc)
         self.log['errors'] = traceback.format_exc()
         return response
 
     def finalize_response(self, request, response, *args, **kwargs):
+        """
+        Get base fields and save them in log model
+        """
 
         response = super().finalize_response(request, response, *args, **kwargs)
 
@@ -51,6 +78,9 @@ class BaseLoggingMixin:
         return response
 
     def handle_log(self):
+        """
+        Override handle_log depends on your requirements
+        """
         raise NotImplementedError
 
     def _get_ip_address(self, request):
@@ -79,12 +109,17 @@ class BaseLoggingMixin:
         return user
 
     def should_log(self, request):
+        """
+        Checking that logs should be executed on which methods.
+        """
         return (
                 self.logging_methods == '__all__' or request.method in self.logging_methods
         )
 
     def get_extra_log_data(self, request, response):
-
+        """
+        Override this method for custom mixins inheriting from BaseLoggingMixin
+        """
         return {}
 
 
@@ -111,29 +146,3 @@ class BaseDownloadLoggingMixin(BaseLoggingMixin):
             except Link.DoesNotExist:
                 return None
         return None
-
-
-class BaseChangeLoggingMixin(BaseLoggingMixin):
-    def get_extra_log_data(self, request, response):
-        return {
-            'content_type': self._get_content_type(),
-            'object_id': self._get_object_id(),
-            'field_name': self._get_field_name(),
-            'old_value': self._get_old_value(),
-            'new_value': self._get_new_value(),
-        }
-
-    def _get_content_type(self):
-        pass
-
-    def _get_object_id(self):
-        pass
-
-    def _get_field_name(self):
-        pass
-
-    def _get_old_value(self):
-        pass
-
-    def _get_new_value(self):
-        pass

@@ -102,6 +102,7 @@ class File(models.Model):
             self.refresh_from_db(fields=['download_count'])
 
     def can_download(self):
+        """Define file could be downloaded or not"""
         if self.status != self.Status.ACTIVE:
             return False
         if self.is_expired():
@@ -112,7 +113,7 @@ class File(models.Model):
 
     def change_status(self, new_status):
         """
-        Enforce allow transition and log them
+        Enforce allow transition
 
         Allowed transition:
             -Active -> Expired
@@ -143,8 +144,6 @@ class File(models.Model):
 
             for log in self.download_logs.all():
                 log.change_status(log.Status.DELETED)
-
-        # TODO: adding log after creating its own model
 
 
 class Link(models.Model):
@@ -188,6 +187,13 @@ class Link(models.Model):
         return f'{self.short_code} - {self.file.id}'
 
     def change_status(self, new_status):
+        """
+        Enforce allow transition
+
+        Allowed transition:
+            Active -> Deleted,
+            Deleted -> (NOT ALLOWED)
+        """
         allowed_transtion = {
             self.Status.ACTIVE: {self.Status.DELETED},
             self.Status.DELETED: set()

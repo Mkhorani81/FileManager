@@ -5,6 +5,19 @@ from file.models import File
 
 
 class BaseLogModel(models.Model):
+    """
+    This is the base model for all logs that other custom logs could inherit from
+
+    Fields:
+        - id
+        - user
+        - username
+        - timestamp
+        - ip_address
+        - success
+        - status_code
+        - errors
+    """
     id = models.BigAutoField(
         primary_key=True
     )
