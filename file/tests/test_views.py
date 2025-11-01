@@ -134,4 +134,4 @@ class TestFileAdminViewSet(APITestCase):
         url = reverse('file:admin-detail', args=[file_obj.id])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(File.objects.count(), 0)
+        self.assertEqual(File.objects.filter(status__in=[File.Status.ACTIVE, File.Status.EXPIRED]).count(), 0)

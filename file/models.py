@@ -137,10 +137,21 @@ class File(models.Model):
         self.status = new_status
         self.save(update_fields=['status'])
 
+        if new_status == self.Status.DELETED:
+            if hasattr(self, 'link'):
+                self.link.change_status(self.link.Status.DELETED)
+
+            for log in self.download_logs.all():
+                log.change_status(log.Status.DELETED)
+
         # TODO: adding log after creating its own model
 
 
 class Link(models.Model):
+    class Status(models.TextChoices):
+        ACTIVE = 'active', 'Active'
+        DELETED = 'deleted', 'Deleted'
+
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
@@ -160,6 +171,12 @@ class Link(models.Model):
         auto_now_add=True
     )
 
+    status = models.CharField(
+        max_length=16,
+        choices=Status.choices,
+        default=Status.ACTIVE,
+    )
+
     objects = LinkManager()
 
     class Meta:
@@ -169,3 +186,18 @@ class Link(models.Model):
 
     def __str__(self):
         return f'{self.short_code} - {self.file.id}'
+
+    def change_status(self, new_status):
+        allowed_transtion = {
+            self.Status.ACTIVE: {self.Status.DELETED},
+            self.Status.DELETED: set()
+        }
+
+        if new_status == self.status:
+            return
+
+        if new_status not in allowed_transtion.get(self.status, set()):
+            raise ValueError(f"Transition from {self.status} to {new_status} now allowed!!!")
+
+        self.status = new_status
+        self.save(update_fields=['status'])

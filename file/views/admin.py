@@ -51,10 +51,10 @@ class FileAdminViewSet(viewsets.ViewSet):
         return Response(ser_data.data)
 
     def destroy(self, request, pk=None):
-        file = File.objects.filter(id=pk)
 
         try:
-            file.delete()
+            file = File.objects.get(id=pk)
+            file.change_status(File.Status.DELETED)
         except Exception as e:
             return Response(
                 {'detail': f'Failed to delete file : {str(e)}'},
