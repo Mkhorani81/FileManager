@@ -11,15 +11,6 @@ services:
     networks:
       - backend
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    networks:
-      - backend
-
   web:
     build:
       context: .
@@ -33,38 +24,11 @@ services:
       - .env
     depends_on:
       - db
-      - rabbitmq
     expose:
       - 8000
     networks:
       - backend
     restart: always
-
-  celery:
-    build:
-      context: .
-    container_name: celery_worker
-    command: celery -A FileManager worker -l info
-    env_file:
-      - .env
-    depends_on:
-      - db
-      - rabbitmq
-    networks:
-      - backend
-
-  celery-beat:
-    build:
-      context: .
-    container_name: celery_beat
-    command: celery -A FileManager beat -l info
-    env_file:
-      - .env
-    depends_on:
-      - db
-      - rabbitmq
-    networks:
-      - backend
 
   nginx:
     image: nginx:alpine

@@ -1,5 +1,15 @@
-SECRET_KEY = "DJANGO_SECRET_KEY"
-ENGINE = 'DJANGO_DB(sqlite3, postgresql)'
-FILES_ALLOWED_EXTENSIONS="FORMAT_FILES("pdf,jpg,...")"
-MAX_FILE_SIZE_MB="FILE_SIZE_IN_MB"
+SECRET_KEY = ******
+DEBUG = False
+ALLOWED_HOSTS=localhost,127.0.0.1,web
+FILES_ALLOWED_EXTENSIONS=pdf,jpg,jpeg,png,zip,txt
+MAX_FILE_SIZE_MB=100
 
+
+
+# Database
+ENGINE = postgresql
+POSTGRES_DB = filemanager_db
+POSTGRES_USER = ******
+POSTGRES_PASSWORD = ******
+DB_HOST= db
+DB_PORT= 5432
