@@ -139,6 +139,7 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
 }
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

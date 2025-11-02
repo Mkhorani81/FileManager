@@ -38,6 +38,7 @@ services:
       - 8000
     networks:
       - backend
+    restart: always
 
   celery:
     build:
@@ -78,6 +79,7 @@ services:
       - web
     networks:
       - backend
+    restart: always
 
 volumes:
   postgres_data:
