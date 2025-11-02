@@ -1,14 +1,20 @@
-FROM python:latest
+FROM python:3.12-slim
 
-WORKDIR /code
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-COPY requirements.txt /code/
+WORKDIR /app
 
-RUN pip install -U pip
-RUN pip install -r requirements.txt
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    pip install gunicorn
 
-COPY . /code/
+COPY . /app/
+
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8000
 
-CMD ["gunicorn", "FileManager.wsgi", ":8000"]
+CMD ["/app/entrypoint.sh"]

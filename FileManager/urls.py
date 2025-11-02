@@ -15,15 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 API_VERSION = 'api/v1'
 
 urlpatterns = [
+    path('', lambda request: HttpResponse("File Manager Application")),
     path('admin/', admin.site.urls),
     path(f'{API_VERSION}/account/', include('account.urls'), name='account'),
-    path(f'{API_VERSION}/file/',include('file.urls'), name='file'),
+    path(f'{API_VERSION}/file/', include('file.urls'), name='file'),
     path(f'{API_VERSION}/log/', include('log.urls'), name='log'),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:
