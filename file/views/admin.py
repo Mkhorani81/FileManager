@@ -70,12 +70,13 @@ class FileAdminViewSet(viewsets.ViewSet):
         try:
             file = File.objects.get(id=pk)
             file.change_status(File.Status.DELETED)
+            return Response(
+                {'detail': 'Successfully deleted file and related records'},
+                status=status.HTTP_204_NO_CONTENT
+            )
         except Exception as e:
             return Response(
                 {'detail': f'Failed to delete file : {str(e)}'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response(
-            {'detail': f'Successfully deleted file and related records'},
-            status=status.HTTP_204_NO_CONTENT
-        )
+
