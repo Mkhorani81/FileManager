@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
-    'storages',
 
     # local apps
     'account.apps.AccountConfig',
@@ -83,7 +82,24 @@ WSGI_APPLICATION = 'FileManager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {}
+if config('ENGINE') == 'postgresql':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('POSTGRES_DB'),
+            'USER': config('POSTGRES_USER'),
+            'PASSWORD': config('POSTGRES_PASSWORD'),
+            'HOST': config('DB_HOST', default='db'),
+            'PORT': config('DB_PORT', default='5432'),
+        }
+    }
+elif config('ENGINE') == 'sqlite3':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -139,7 +155,6 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
 }
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -153,6 +168,7 @@ except ImportError:
 # FILES ALLOWED EXTENSIONS
 FILES_ALLOWED_EXTENSIONS = config('FILES_ALLOWED_EXTENSIONS')
 MAX_FILE_SIZE_MB = int(config('MAX_FILE_SIZE_MB'))
+
 
 import sys
 import logging

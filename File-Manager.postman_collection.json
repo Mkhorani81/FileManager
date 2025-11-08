@@ -1,0 +1,376 @@
+{
+	"info": {
+		"_postman_id": "a196e3cf-3c62-44f7-a0c7-5a75cba09711",
+		"name": "File-Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "33267900"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone_number",
+							"value": "09111111111",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "root",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://127.0.0.1:80/api/v1/account/login/"
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkyMTYzLCJpYXQiOjE3NjI1OTE4NjMsImp0aSI6ImNmZDE3Nzc4NWY0MTQ2M2E4OGY4ODU1YWU4MjFmYzgwIiwidXNlcl9pZCI6IjEifQ.HUCMEvwGPkHteECtHV4_CT9OEVzHUIO3t57em-fa-lc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "http://127.0.0.1:80/api/v1/account/logout/"
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone_number",
+							"value": "09121231234",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "user@user.com",
+							"type": "text"
+						},
+						{
+							"key": "full_name",
+							"value": "user1",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "user1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:80/api/v1/account/register/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"v1",
+						"account",
+						"register",
+						""
+					],
+					"query": [
+						{
+							"key": "phone_number",
+							"value": "09122222222",
+							"disabled": true
+						},
+						{
+							"key": "email",
+							"value": "user@user.com",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh-token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkyMzgzLCJpYXQiOjE3NjI1OTIwODMsImp0aSI6IjE3MzZhMmRkNjc5NzRmNDViOGQzODkyMmIyNzRiY2U3IiwidXNlcl9pZCI6IjEifQ.drzDAulsLiYpRzlmrG4lkPwomTV9b4GOyCv1rU2wclU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "refresh",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2MjY3ODQ4MywiaWF0IjoxNzYyNTkyMDgzLCJqdGkiOiJlYTNmNGE1Mzg3MDM0NmM2ODczZjQ1ZjhjYjBhOWUyOCIsInVzZXJfaWQiOiIxIn0.N2UzSoDA87NhfGOaRhKQfzFMKg8WkqvPN4Yb4dxgW78",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://127.0.0.1:80/api/v1/account/token/refresh/"
+			},
+			"response": []
+		},
+		{
+			"name": "admin-upload",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkyODcyLCJpYXQiOjE3NjI1OTI1NzIsImp0aSI6ImI1MGFmNDk1Y2VhOTQ2NzJiY2I2NjJkZjk5ZWJiOTRjIiwidXNlcl9pZCI6IjEifQ.U_lNiD_zk4fN0yottSPo0gqqV32foRIqsz9rX6SEAKs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "postman-cloud:///1f0b3782-e86a-49b0-8605-66fdc341350e"
+						},
+						{
+							"key": "max_downloads",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "expires_at",
+							"value": "2026-01-01",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://127.0.0.1:80/api/v1/file/admin/"
+			},
+			"response": []
+		},
+		{
+			"name": "file-update",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkyNDc2LCJpYXQiOjE3NjI1OTIxNzYsImp0aSI6ImJhZTQ2NjY2YzA0OTQ5NzViN2EyMmM4OGUzYWE5MWZhIiwidXNlcl9pZCI6IjEifQ._fY_xN6OpG4JebEeu_xflnsgOo5uS2I6iGE2DuS-BmA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "max_downloads",
+							"value": "6",
+							"type": "text"
+						},
+						{
+							"key": "expires_at",
+							"value": "2026-02-02",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://127.0.0.1:80/api/v1/file/admin/2de51502-3b6e-4d55-a41c-4a5de0874dde/"
+			},
+			"response": []
+		},
+		{
+			"name": "admin-list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkyODcyLCJpYXQiOjE3NjI1OTI1NzIsImp0aSI6ImI1MGFmNDk1Y2VhOTQ2NzJiY2I2NjJkZjk5ZWJiOTRjIiwidXNlcl9pZCI6IjEifQ.U_lNiD_zk4fN0yottSPo0gqqV32foRIqsz9rX6SEAKs",
+						"type": "text"
+					}
+				],
+				"url": "http://127.0.0.1:80/api/v1/file/admin/"
+			},
+			"response": []
+		},
+		{
+			"name": "admin-delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkyODcyLCJpYXQiOjE3NjI1OTI1NzIsImp0aSI6ImI1MGFmNDk1Y2VhOTQ2NzJiY2I2NjJkZjk5ZWJiOTRjIiwidXNlcl9pZCI6IjEifQ.U_lNiD_zk4fN0yottSPo0gqqV32foRIqsz9rX6SEAKs",
+						"type": "text"
+					}
+				],
+				"url": "http://127.0.0.1:80/api/v1/file/admin/2de51502-3b6e-4d55-a41c-4a5de0874dde/"
+			},
+			"response": []
+		},
+		{
+			"name": "admin-retrive",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkzMDc0LCJpYXQiOjE3NjI1OTI3NzQsImp0aSI6ImE4YTliODA2ZWYwOTQ1Zjk5NjU5YTE2OTRiYTM1MDU4IiwidXNlcl9pZCI6IjEifQ.iIeXYHwfD1jtcCOvoWzn_A_A2_d0MsYngYPfmtNcmIU",
+						"type": "text"
+					}
+				],
+				"url": "http://127.0.0.1:80/api/v1/file/admin/f39af8b9-8886-4710-bc31-da5301b3bd0d"
+			},
+			"response": []
+		},
+		{
+			"name": "client-upload",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkzMjk0LCJpYXQiOjE3NjI1OTI5OTQsImp0aSI6ImIyOWJjYjE0ZTYxZDQ4MWM5MDI5MDYwY2Q4YzJhZjNiIiwidXNlcl9pZCI6IjIifQ.Je85Faw6WAuH_QHzQJTGPn-_0o4_H-p9BZNk3ovtCDs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "postman-cloud:///1f0b803b-1442-4050-b023-5a02ad0d89e0"
+						},
+						{
+							"key": "max_downloads",
+							"value": "11",
+							"type": "text"
+						},
+						{
+							"key": "expires_at",
+							"value": "2025-12-14",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://127.0.0.1:80/api/v1/file/upload/"
+			},
+			"response": []
+		},
+		{
+			"name": "download",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkzMjk0LCJpYXQiOjE3NjI1OTI5OTQsImp0aSI6ImIyOWJjYjE0ZTYxZDQ4MWM5MDI5MDYwY2Q4YzJhZjNiIiwidXNlcl9pZCI6IjIifQ.Je85Faw6WAuH_QHzQJTGPn-_0o4_H-p9BZNk3ovtCDs",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "http://127.0.0.1:80/api/v1/file/download/owTFYmArgYrledrG"
+			},
+			"response": []
+		},
+		{
+			"name": "download-log",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkzNDc3LCJpYXQiOjE3NjI1OTMxNzcsImp0aSI6ImRkMjNjNjZjZDMyNjQyODY4NzAxYWE1YjNjMmU0ZDcwIiwidXNlcl9pZCI6IjEifQ.tjD-bEzKYQC9lMVH9O5eMamLEVL31i3gIYa4eQxh0LM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "http://127.0.0.1:80/api/v1/log/admin/download-log"
+			},
+			"response": []
+		},
+		{
+			"name": "donwload-log-group",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNTkzNTk1LCJpYXQiOjE3NjI1OTMyOTUsImp0aSI6ImQ2MzhlMzQ2NTU4NjRjMjNiMmJhYzIyYTdkYmMyM2Q5IiwidXNlcl9pZCI6IjEifQ.pQu0YMkxqoziYezWurejHSY5BxHJ3kJcjmVid6KLmTw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:80/api/v1/log/admin/download-log/group_by/?group_by=user",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"v1",
+						"log",
+						"admin",
+						"download-log",
+						"group_by",
+						""
+					],
+					"query": [
+						{
+							"key": "group_by",
+							"value": "user"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
