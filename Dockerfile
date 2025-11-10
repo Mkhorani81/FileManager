@@ -12,9 +12,7 @@ RUN pip install --upgrade pip && \
 
 COPY . /app/
 
-COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8000
-
-CMD ["/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh","/app/entrypoint.sh"]

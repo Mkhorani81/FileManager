@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.http import FileResponse
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -34,8 +35,9 @@ class FileUploadView(APIView):
         if serializer.is_valid():
             file_obj = serializer.save()
             link = Link.objects.generate_download_link(file_obj)
+            file_url = reverse('file:file-download', args=[link.short_code])
             response = {
-                'link': link.short_code,
+                'link': file_url,
                 'file_id': file_obj.id,
             }
             return Response(response, status=status.HTTP_201_CREATED)

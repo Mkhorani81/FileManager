@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
 from rest_framework import serializers
 
@@ -53,9 +54,14 @@ class FileUploadSerializer(serializers.ModelSerializer):
 
 
 class LinkSerializer(serializers.ModelSerializer):
+    download_link = serializers.SerializerMethodField()
     class Meta:
         model = Link
-        fields = ('short_code', 'created_at')
+        fields = ('download_link', 'created_at')
+
+    def get_download_link(self, obj):
+        download_url = reverse('file:file-download', args=[obj.short_code])
+        return download_url
 
 
 class FileListSerializer(serializers.ModelSerializer):

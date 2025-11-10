@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser
@@ -34,8 +35,9 @@ class FileAdminViewSet(viewsets.ViewSet):
         if ser_data.is_valid():
             file_obj = ser_data.save()
             link = Link.objects.generate_download_link(file_obj)
+            file_url = reverse('file:file-download', args=[link.short_code])
             response = {
-                'link': link.short_code,
+                'link': file_url,
                 'file_id': file_obj.id,
             }
             return Response(response, status=status.HTTP_201_CREATED)
@@ -71,7 +73,6 @@ class FileAdminViewSet(viewsets.ViewSet):
             file = File.objects.get(id=pk)
             file.change_status(File.Status.DELETED)
             return Response(
-                {'detail': 'Successfully deleted file and related records'},
                 status=status.HTTP_204_NO_CONTENT
             )
         except Exception as e:
